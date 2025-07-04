@@ -27,17 +27,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html >
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      > <ThemeProvider attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
-        <ConvexClientProvider>
-        <TooltipProvider>{children}</TooltipProvider>
-        <Toaster richColors/>
-        </ConvexClientProvider></ThemeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ConvexClientProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+            <Toaster richColors />
+          </ConvexClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -12,6 +12,8 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import TextareaAutosize from "react-textarea-autosize"
+import { Button } from '@/components/ui/button';
+import { SendHorizonal } from 'lucide-react';
 
 const chatMessageSchema = z.object({
   content: z.string().min(1, {
@@ -77,6 +79,9 @@ const ChatInput = () => {
                 </FormItem>
               )}
             />
+            <Button disabled={pending} size="icon" type="submit">
+              <SendHorizonal />
+            </Button>
           </form>
         </Form>
       </div>

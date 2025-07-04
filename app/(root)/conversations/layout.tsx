@@ -23,7 +23,9 @@ const conversationlayout = ({children}: Props) => {
           return conversations.conversation.isGroup?null:(
             <DMConversationItem key={conversations.conversation._id} id={conversations.conversation._id}
             username={conversations.otherMember?.username|| ""}
-            imageUrl={conversations.otherMember?.imageUrl||""}/> 
+            imageUrl={conversations.otherMember?.imageUrl||""}
+            lastMessageContent={conversations.lastMessage?.content}
+            lastMessageSender={conversations.lastMessage?.sender}/> 
           )
         })
        ):(<Loader2/>)}
