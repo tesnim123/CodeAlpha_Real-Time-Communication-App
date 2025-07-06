@@ -10,10 +10,12 @@ import Header from './_components/Header';
 import Body from './_components/body/Body';
 import ChatInput from './_components/input/ChatInput';
 import RemoveFriendDialog from './_components/dialogs/RemoveFriendDialog';
+  // <-- Import your CallPopup here
+
 
 type Props = {
   params: Promise<{
-    conversationId: Id<"conversations">;
+    conversationId: Id<'conversations'>;
   }>;
 };
 
@@ -22,47 +24,75 @@ const ConversationPage = ({ params }: Props) => {
   const resolvedParams = use(params);
   const queryParams = React.useMemo(() => ({ id: resolvedParams.conversationId }), [resolvedParams.conversationId]);
   const conversation = useQuery(api.conversation.get, queryParams);
-  const [removeFriendDialogOpen,setRemoveFriendDialogOpen]=useState(false);
-  const [deleteGroupDialogOpen,setdeleteGroupDialogOpen]=useState(false);
-  const [leaveGroupDialogOpen,setleaveGroupDialogOpen]=useState(false);
-  const [callType,setCallType]=useState<"audio"|"video"|null>(null);
+
+  const [removeFriendDialogOpen, setRemoveFriendDialogOpen] = useState(false);
+  const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false);
+  const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false);
+  const [callId, setCallId] = useState<Id<'calls'> | null>(null);
+
+
+  // Use useCall hook to manage calls
+  // Make sure otherMember exists before accessing _id
+  const receiverId = conversation?.otherMember._id ;
   
+  if (conversation === undefined) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Loader2 className="h-8 w-8" />
+      </div>
+    );
+  }
+
+  if (conversation === null) {
+    return <p className="w-full h-full flex items-center justify-center">Conversation not found</p>;
+  }
+
   return (
-    conversation===undefined?
-    <div className='w-full h-full flex items-center justify-center'>
-      <Loader2 className="h-8 w-8"/>
-    </div>:
-    conversation===null?<p className='w-full h-full flex items-center justify-center'>Conversation not found</p>
-    :<ConversationContainer><RemoveFriendDialog conversationId={resolvedParams.conversationId} open={removeFriendDialogOpen} setOpen={setRemoveFriendDialogOpen}/>
+    <ConversationContainer>
+      <RemoveFriendDialog
+        conversationId={resolvedParams.conversationId}
+        open={removeFriendDialogOpen}
+        setOpen={setRemoveFriendDialogOpen}
+      />
 
-      <Header name={(conversation.isGroup?conversation.name:conversation.otherMember.username)||""} 
-      imageUrl={conversation.isGroup?undefined:conversation.otherMember.imageUrl}
-      options={conversation.isGroup?[
-        {
-          label:"Leave group",
-          destructive:false,onClick:()=>setleaveGroupDialogOpen(true),
-        },
-        {
-          label:"Delete group",
-          destructive:true,onClick:()=>setdeleteGroupDialogOpen(true),
-        }
-      ]:[
-         {
-          label:"Remove friend",
-          destructive:true,onClick:()=>setRemoveFriendDialogOpen(true),
-        }
+      <Header
+  name={(conversation.isGroup ? conversation.name : conversation.otherMember.username) || ''}
+  imageUrl={conversation.isGroup ? undefined : conversation.otherMember.imageUrl}
+  conversationId={conversation._id}
+  receiverId={receiverId!}
+  
+  options={
+    conversation.isGroup
+      ? [
+          {
+            label: 'Leave group',
+            destructive: false,
+            onClick: () => setLeaveGroupDialogOpen(true),
+          },
+          {
+            label: 'Delete group',
+            destructive: true,
+            onClick: () => setDeleteGroupDialogOpen(true),
+          },
+        ]
+      : [
+          {
+            label: 'Remove friend',
+            destructive: true,
+            onClick: () => setRemoveFriendDialogOpen(true),
+          },
+        ]
+  }
+/>
 
-      ]}/>
+
       <Body />
       <ChatInput />
+
+      
+      
     </ConversationContainer>
-  )
-
-  
-
-   
-
-  
+  );
 };
 
 export default ConversationPage;

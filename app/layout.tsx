@@ -6,6 +6,8 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ThemeProvider } from "@/components/ui/theme/theme-provider";
 import { Toaster } from "sonner";
 
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -36,8 +38,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ConvexClientProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-            <Toaster richColors />
+            
+              <TooltipProvider>{children}</TooltipProvider>
+              <Toaster richColors />
+            
           </ConvexClientProvider>
         </ThemeProvider>
       </body>
